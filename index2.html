@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech-to-Text Example</title>
+</head>
+<body>
+    <button id="startButton">Comenzar a hablar</button>
+    <div id="output"></div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const outputDiv = document.getElementById('output');
+        
+        // Verifica si el navegador admite el reconocimiento de voz
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            
+            // Configura la configuración de reconocimiento
+            recognition.continuous = true; // Escuchar continuamente
+            recognition.interimResults = true; // Resultados intermedios
+            
+            // Evento que se activa cuando se detecta habla
+            recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript;
+                outputDiv.textContent = transcript;
+            };
+            
+            // Manejo del botón para iniciar y detener el reconocimiento
+            let isListening = false;
+            startButton.addEventListener('click', () => {
+                if (isListening) {
+                    recognition.stop();
+                    startButton.textContent = 'Comenzar a hablar';
+                } else {
+                    recognition.start();
+                    startButton.textContent = 'Detener';
+                }
+                isListening = !isListening;
+            });
+        } else {
+            outputDiv.textContent = 'El reconocimiento de voz no es compatible con este navegador.';
+        }
+    </script>
+</body>
+</html>
